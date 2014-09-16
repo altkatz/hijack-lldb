@@ -6,7 +6,11 @@ module Hijack
         puts
         @received_sigint = true
       end
-      gdb = GDB.new(pid)
+      if Hijack.options[:lldb]
+        gdb = LLDB.new(pid)
+      else
+        gdb = GDB.new(pid)
+      end
       gdb.eval(payload(pid))
       gdb.quit
       exit if @received_sigint
